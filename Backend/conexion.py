@@ -9,12 +9,29 @@ conexion = mysql.connector.connect(
 
 cursor = conexion.cursor()
 
-correo = datos.correo
-contra = datos.contra
+def addUsuario(correo, contra):
+    with open("registro.json") as archivo:
+        datos = json.load(archivo)
 
-cursor.execute("insert into usuarios (correo, contraseña) values ('" + correo + "' ,'" + contra + "')")
-conexion.commit()
+        correo = datos["correo"]
+        contra = datos["contra"]
 
-cursor.execute("select * from usuarios")
-for bd in cursor:  # type: ignore
-    print(bd)
+    cursor.execute("insert into usuarios (correo, contraseña) values ('" + correo + "' ,'" + contra + "')")
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+
+def datosGen(curp, nombre, apeP, apeM, correo, fNacimiento, codigoEstudiante, lugarNacimiento, estadoCivil, sexo, nCelular):
+    with open ("datos.json") as archivo:
+        datos = json.load(archivo)
+
+        curp = datos["curp"]
+        nombre = datos["nombre"]
+        apeP = datos["apellidoPaterno"]
+        apeM = datos["apellidoMaterno"]
+        correo = datos["correo"]
+
+
+#cursor.execute("select * from usuarios")
+#for bd in cursor:  # type: ignore
+#    print(bd)
