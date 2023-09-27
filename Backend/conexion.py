@@ -1,5 +1,5 @@
 import mysql.connector # se debe descargar la libreria "pip install mysql-connector-python
-import datos
+import json
 conexion = mysql.connector.connect(
     host = "127.0.0.1",
     user = "root",
