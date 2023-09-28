@@ -9,7 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <link href="https://fonts.cdnfonts.com/css/nexa-bold?styles=29913" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/handil-pro?styles=162901" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"/>
   <script src="https://kit.fontawesome.com/deb38cd3d7.js" crossorigin="anonymous"></script>     
   <title>Formulario de Datos Laboral</title>
 </head>
@@ -19,7 +19,7 @@
     <div class="container">
       <!-- Logo -->
       <a class="navbar-brand" href="#">
-        <img src="css/img/LogoCUT.png" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
+        <img src="{{ url_for('static', filename='css/img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
       </a>
     </div>
   </nav>
@@ -30,7 +30,8 @@
           <h5 class="pb-2 text-center registro-text">REGISTRO</h5>
           <h5 class="pb-2 text-center datos-generales-text">Informacion laboral</h5>
           <hr>
-          <form>
+          {% block content %}
+          <form action="/laboral" method="post">
             <!-- Grupo 1 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
@@ -44,15 +45,15 @@
                 </div>             
               </div>
               <div class="col-md-4">
-                <label for="nombreempresaInput">Nombre del lugar de trabajo</label>
+                <label for="lugardetrabajo">Nombre del lugar de trabajo</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="nombreempresaInput" placeholder="Ingresa el nombre del lugar de trabajo">
+                  <input type="text" class="form-control circular" id="nombreempresaInput" name="lugardetrabajo" placeholder="Ingresa el nombre del lugar de trabajo">
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="horarioInput">Horario laboral</label>
+                <label for="horariolaboral">Horario laboral</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="horarioInput" placeholder="Ingresa tu horario laboral">
+                  <input type="text" class="form-control circular" id="horarioInput" name="horariolaboral" placeholder="Ingresa tu horario laboral">
                 </div>
               </div>
             </div>
@@ -60,9 +61,9 @@
             <!-- Grupo 2 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
-                <label for="puestoInput">Puesto de trabajo</label>
+                <label for="puestolaboral">Puesto de trabajo</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="puestoInput" placeholder="Ingresa tu puesto">
+                  <input type="text" class="form-control circular" id="puestoInput" name="puestolaboral" placeholder="Ingresa tu puesto">
                 </div>
               </div>
               <div class="col-md-4">
@@ -76,14 +77,16 @@
                 </div>             
               </div>
                 
-  <!-- Botones de navegación -->
-  <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E;">Regresar</button>
-    <button type="button" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E; text-align: center;">Siguiente</button>
-  </div>
+              <!-- Botones de navegación -->
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E;">Regresar</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E; text-align: center;">Siguiente</button>
+              </div>
 
             </div>
           </form>
+          {% endblock %}
+
         </div>
       </div>
     </div>

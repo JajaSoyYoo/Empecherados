@@ -1,4 +1,4 @@
-from flask import Flask, render_template 
+from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 from config import config
 
@@ -19,6 +19,17 @@ def jalar():
 @app.route('/Registro_Laboral')
 def laboral():
      return render_template('Laboral.html')
+
+@app.route('/laboral', methods=['POST'])
+def add_registro():
+     if request.method == 'POST':
+         lugar= request.form['lugardetrabajo']
+         horario= request.form['horariolaboral']
+         puesto= request.form['puestolaboral']
+         cursor = mysql.connection.cursor()
+         cursor.execute("insert into info_laboral (Trabajando, Direccion_trabajo, Horario_Laboral, Puesto_Trabajo, Correo_PK_Info) values ('Si', '"+lugar+"', '"+horario+"', '"+puesto+"','alan.hcris@gmail.com')")
+         mysql.connection.commit()
+         return general()
 
 @app.route('/General')
 def general():
