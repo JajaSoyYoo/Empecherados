@@ -77,16 +77,16 @@
           
         </div>
     </div>
-  
+
+    <form method="post" action="/inicio"> 
     <div class="registro">
-      <h1>¡CONVOCATORIA ABIERTA!</h1>
-      <button>REGISTRATE</button>
-    </div>
-  
-    <div class="convocatoria">
-      <h2>La convocatoria se cierra el dia x de x del 202x favor de registrarse antes de ese dia</h2>
-    </div>
-  
+          <h1>¡CONVOCATORIA ABIERTA!</h1>
+          <button type="submit" name="botonRegistro">REGISTRATE</button>
+        </div>
+      <div class="convocatoria">
+        <h2>La convocatoria se cierra el dia x de x del 202x favor de registrarse antes de ese dia</h2>
+      </div>
+   </form>
     <div class="maestria">
       <div class="imagen">
         <img src="{{ url_for('static', filename='img/maestrias.jpg') }}" alt="maestria">

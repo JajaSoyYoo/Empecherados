@@ -39,6 +39,15 @@ def general():
 def estudios():
      return render_template('Estudios.html')
 
+@app.route('/inicio')
+def inicio():
+     return render_template('inicio.html')
+
+@app.route('/seleccion')
+def seleccion():
+     return render_template('seleccion.html')
+
+
 def Error404(error):
     return '<h1>Contacte a soporte tecnico</h1>'
 
