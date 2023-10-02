@@ -26,8 +26,9 @@ def add_registro():
          lugar= request.form['lugardetrabajo']
          horario= request.form['horariolaboral']
          puesto= request.form['puestolaboral']
+         siOno = request.form['trabajasiono']
          cursor = mysql.connection.cursor()
-         cursor.execute("insert into info_laboral (Trabajando, Direccion_trabajo, Horario_Laboral, Puesto_Trabajo, Correo_PK_Info) values ('Si', '"+lugar+"', '"+horario+"', '"+puesto+"','alan.hcris@gmail.com')")
+         cursor.execute("insert into info_laboral (Trabajando, Direccion_trabajo, Horario_Laboral, Puesto_Trabajo, Correo_PK_Info) values ('"+siOno+"', '"+lugar+"', '"+horario+"', '"+puesto+"','alan.hcris@gmail.com')")
          mysql.connection.commit()
          return general()
 
