@@ -48,6 +48,9 @@ def inicio():
 def seleccion():
      return render_template('seleccion.html')
 
+@app.route('/dash')
+def dash():
+     return render_template('dashboard.html')
 
 def Error404(error):
     return '<h1>Contacte a soporte tecnico</h1>'
