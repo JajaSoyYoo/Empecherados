@@ -63,7 +63,6 @@
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
                     <option value="Otro">Otro</option>
-                    <option value="Prefiero">Prefiero no decirlo</option>
                   </select>
                 </div>             
               </div>
@@ -84,9 +83,8 @@
             <!-- Grupo 3 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
-                <label for="postalInput">Codigo postal</label>
+                <label for="codigo_postal">Codigo postal</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="postalInput" placeholder="Ingresa tu codigo postal" required>
                   <input type="text" name="codigo_postal" class="form-control circular" id="codigo_postal" maxlength="5" minlength="5" placeholder="Ingresa tu codigo postal" required="">
                 </div>
               </div>
@@ -97,25 +95,30 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="estadoInput">Estado</label>
+                <label for="id_estado">Estado</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="estadoInput" placeholder="Ingresa tu estado" required>
-                </div>
+                  <select name="estado" class="form-select circular" id="id_estado" required><option disabled selected value="0" selected="true">Selecciona una opcion...</option><option value="1">Aguascalientes</option><option value="2">Baja California</option><option value="3">Baja California Sur</option><option value="4">Campeche</option><option value="8">Chihuahua</option><option value="7">Chiapas</option><option value="9">Ciudad de México</option><option value="5">Coahuila de Zaragoza</option><option value="6">Colima</option><option value="10">Durango</option><option value="12">Guerrero</option><option value="11">Guanajuato</option><option value="13">Hidalgo</option><option value="14">Jalisco</option><option value="15">Estado de México</option><option value="16">Michoacán de Ocampo</option><option value="17">Morelos</option><option value="18">Nayarit</option><option value="19">Nuevo León</option><option value="20">Oaxaca</option><option value="21">Puebla</option><option value="22">Querétaro</option><option value="23">Quintana Roo</option><option value="25">Sinaloa</option><option value="24">San Luis Potosí</option><option value="26">Sonora</option><option value="27">Tabasco</option><option value="28">Tamaulipas</option><option value="29">Tlaxcala</option><option value="30">Veracruz de Ignacio de la Llave</option><option value="31">Yucatán</option><option value="32">Zacatecas</option></select>
               </div>
             </div>
 
             <!-- Grupo 4 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
-                <label for="ciudadInput">Ciudad</label>
+                <label for="id_municipio">Municipio</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="ciudadInput" placeholder="Ingresa tu ciudad" required>
+                  <select name="municipio" class="form-select circular" id="id_municipio" required>
+                    <option value="0">Selecciona tu municipio...</option>
+                  
+                  </select>
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="coloniaInput">Colonia</label>
+                <label for="id_colonia">Colonia</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="coloniaInput" placeholder="Ingresa tu colonia" required>
+                  <select name="colonia" class="form-select circular" id="id_colonia" required>
+                    <option value="0">Selecciona tu colonia...</option>
+                  
+                  </select>
                 </div>
               </div>
               <div class="col-md-4">
