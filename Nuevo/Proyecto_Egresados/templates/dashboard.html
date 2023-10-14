@@ -11,12 +11,13 @@
 
     <title>Dashboard Coordinador</title>
 
-    <!-- Custom fonts for this -->
-    <link href="{{ url_for('static', filename='css/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- Custom fonts for this template-->
+    <link href="css/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+    <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <!-- Custom styles for this template-->
-    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -30,7 +31,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-text mx-3"><img src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow"></div>
+                <div class="sidebar-brand-text mx-3"><img src="css/img/LogoCUT.png" alt="Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow"></div>
             </a>
 
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -154,9 +155,10 @@
 
                                     </div>
                                     <!-- Page Heading -->
+
                                            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                                 class="fas fa-download fa-sm text-white-50"></i> Generar excel</a>
+                                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="tableToExcel()"><i
+                                                class="fas fa-download fa-sm text-white-50"></i> Generar Excel</button>
                                             </div>
 
                                 </div>
@@ -205,31 +207,31 @@
                                             <tbody>
                                                 <!-- Aquí puedes agregar las filas de la tabla con información de la base de datos -->
                                                 <tr>
-                                                    <td>Nombre 1</td>
-                                                    <td>Apellido Paterno 1</td>
-                                                    <td>Apellido Materno 1</td>
-                                                    <td>Posgrado 1</td>
-                                                    <td>Sexo 1</td>
-                                                    <td>Teléfono 1</td>
-                                                    <td>Correo 1</td>
-                                                    <td>Código Postal 1</td>
-                                                    <td>País 1</td>
-                                                    <td>Estado 1</td>
-                                                    <td>Ciudad 1</td>
-                                                    <td>Colonia 1</td>
-                                                    <td>Nacionalidad 1</td>
-                                                    <td>Fecha Nacimiento 1</td>
-                                                    <td>Universidad 1</td>
-                                                    <td>Carrera 1</td>
-                                                    <td>Titulado 1</td>
-                                                    <td>Ciclo Egreso 1</td>
-                                                    <td>Nivel Inglés 1</td>
-                                                    <td>Promedio 1</td>
-                                                    <td>Trabajando 1</td>
-                                                    <td>Lugar Trabajo 1</td>
-                                                    <td>Horario Laboral 1</td>
-                                                    <td>Puesto Trabajo 1</td>
-                                                    <td>Sector 1</td>
+                                                    <td>Alan Missael</td>
+                                                    <td>Jimenez</td>
+                                                    <td>Torres</td>
+                                                    <td>Maestria</td>
+                                                    <td>Masculino</td>
+                                                    <td>3316717728</td>
+                                                    <td>alan@gmail.com</td>
+                                                    <td>44380</td>
+                                                    <td>Mexico</td>
+                                                    <td>Jalisco</td>
+                                                    <td>Guadalajara</td>
+                                                    <td>Oblatos</td>
+                                                    <td>Mexicana</td>
+                                                    <td>29/03/2002</td>
+                                                    <td>Universidad de guadalajara</td>
+                                                    <td>Ciencias Computacionales</td>
+                                                    <td>Si</td>
+                                                    <td>2024B</td>
+                                                    <td>N2</td>
+                                                    <td>93</td>
+                                                    <td>No</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
                                                 </tr>
                                                 <!-- Puedes agregar más filas aquí con más información -->
                                             </tbody>
@@ -284,7 +286,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -301,6 +303,20 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+
+    
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="table2excel.js"></script>
+
 
 </body>
 
