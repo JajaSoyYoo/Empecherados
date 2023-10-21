@@ -36,19 +36,19 @@
               <div class="col-md-4">
                 <label for="NombreInput">Nombre(s)</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="NombreInput" placeholder="Ingresa tu nombre" required>
+                  <input type="text" name="nombres" class="form-control circular" id="NombreInput" placeholder="Ingresa tu nombre" required>
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="apellidopInput">Apellido paterno</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="apellidopInput" placeholder="Ingresa tu apellido paterno" required>
+                  <input type="text" name="apellido_p" class="form-control circular" id="apellidopInput" placeholder="Ingresa tu apellido paterno" required>
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="apellidomInput">Apellido materno</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="apellidomInput" placeholder="Ingresa tu apellido materno" required>
+                  <input type="text" name="apellido_m" class="form-control circular" id="apellidomInput" placeholder="Ingresa tu apellido materno" required>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@
               <div class="col-md-4">
                 <label for="sexoInput">Sexo</label>
                 <div class="form-group mb-3">
-                  <select class="form-select circular" id="sexoInput" required>
+                  <select class="form-select circular" name="sexo" id="sexoInput" required>
                     <option disabled selected>Selecciona una opción</option>
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
@@ -69,13 +69,13 @@
               <div class="col-md-4">
                 <label for="celInput">Telefono de contacto</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="celInput" placeholder="Ingresa tu Telefono de contacto" required>
+                  <input type="text" name="tel_contacto" class="form-control circular" id="celInput" placeholder="Ingresa tu Telefono de contacto" required>
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="correoInput">Correo electronico</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
+                  <input type="text" name="correo_alumno" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
                 </div>
               </div>
             </div>
@@ -91,7 +91,7 @@
               <div class="col-md-4">
                 <label for="paisInput">Pais</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="paisInput" placeholder="Ingresa tu pais" required>
+                  <input type="text" name="pais" class="form-control circular" id="paisInput" placeholder="Ingresa tu pais" required>
                 </div>
               </div>
               <div class="col-md-4">
@@ -106,7 +106,7 @@
               <div class="col-md-4">
                 <label for="id_municipio">Municipio</label>
                 <div class="form-group mb-3">
-                    <input type="text" name="municipio" class="form-control circular" id="municipio" placeholder="Ingresa tu municipio" required="">
+                    <input type="text" name="ciudad" class="form-control circular" id="municipio" placeholder="Ingresa tu municipio" required="">
                 </div>
               </div>
               <div class="col-md-4">
@@ -118,7 +118,7 @@
               <div class="col-md-4">
                 <label for="nacionalidadInput">Nacionalidad</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="nacionalidadInput" placeholder="Ingresa tu nacionalidad" required>
+                  <input type="text" name="nacionalidad" class="form-control circular" id="nacionalidadInput" placeholder="Ingresa tu nacionalidad" required>
                 </div>
               </div>
             </div>
@@ -128,13 +128,14 @@
               <div class="col-md-4">
                 <label for="fechanacimientoInput">Fecha de nacimiento</label>
                 <div class="form-group mb-3">
-                  <input type="date" class="form-control circular" id="fechanacimientoInput" placeholder="Fecha de Nacimiento" required>
+                  <input type="date" name="f_nacimiento" class="form-control circular" id="fechanacimientoInput" placeholder="Fecha de Nacimiento" required>
                 </div>
               </div>
             </div>
 
             <!-- Botones de navegación -->
             <div class="nav-buttons mt-4 text-center">
+              <input type="submit" class="btn btn-primary"style="border-radius: 30px; background-color: #0C616E; text-align: center;" value="Registrar">
               <button type="button" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E; text-align: center;">Siguiente</button>
             </div>
           </form>

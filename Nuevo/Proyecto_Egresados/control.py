@@ -21,10 +21,45 @@ def add_registro():
          mysql.connection.commit()
          return general()
 
+@app.route('/registrar-general', methods=['POST'])
+def registrar_general():
+    if request.method == 'POST':
+        nombres = request.form['nombres']
+        apellido_p = request.form['apellido_p']
+        apellido_m = request.form['apellido_m']
+        sexo = request.form['sexo']
+        tel_contacto = request.form['tel_contacto']
+        correo_alumno = request.form['correo_alumno']
+        codigo_postal = request.form['codigo_postal']
+        pais = request.form['pais']
+        estado = request.form['estado']
+        ciudad = request.form['ciudad']
+        colonia = request.form['colonia']
+        nacionalidad = request.form['nacionalidad']
+        f_nacimiento = request.form['f_nacimiento']
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO general (Nombres, Apellido_P, Apellido_M, Sexo, Tel_Contacto, Correo_Alumno, Codigo_Postal, Pais, Estado, Ciudad, Colonia, Nacionalidad, F_Nacimiento) VALUES ('"+nombres+"', '"+apellido_p+"', '"+apellido_m+"', '"+sexo+"', '"+tel_contacto+"', '"+correo_alumno+"', '"+codigo_postal+"', '"+pais+"', '"+estado+"', '"+ciudad+"', '"+colonia+"', '"+nacionalidad+"', '"+f_nacimiento+"')")
+        mysql.connection.commit()
+        cursor.close()
+
+        return general()
+
+    
+
+
+@app.route('/dashboard')
+def dashboard():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM info_laboral")
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('dashboard.html', data=data)
+
+
 @app.route('/General')
 def general():
      return render_template('Generales.html')
-
 
 
 @app.route('/inicio')
