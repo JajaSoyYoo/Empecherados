@@ -31,7 +31,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-text mx-3"><img src="css/img/LogoCUT.png" alt="Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow"></div>
+                <div class="sidebar-brand-text mx-3"><img src="{{ url_for('static', filename='css/img/LogoCUT.png') }}" alt="Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow"></div>
             </a>
 
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -318,8 +318,8 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="table2excel.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='table2excel.js') }}"></script>
 
 
 </body>
