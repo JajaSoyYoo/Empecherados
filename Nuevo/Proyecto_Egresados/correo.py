@@ -25,4 +25,4 @@ def enviar_correo(destinatario, asunto, mensaje):
     servidor.quit()
 
 # Uso de la función
-enviar_correo("alanmissaeljimenez@gmail.com", "PRUEBA", "HOLA ESTO ES UNA PINSHI PRUEBA")
+enviar_correo("alan.jimenez1350@alumnos.udg.mx", "PRUEBA", "HOLA ESTO ES UNA PINSHI PRUEBA")
