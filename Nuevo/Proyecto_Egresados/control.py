@@ -6,36 +6,9 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 mysql=MySQL(app)
 
-@app.route('/Registro_Laboral')
-def laboral():
-     return render_template('Laboral.html')
-
-@app.route('/laboral', methods=['POST'])
-def add_registro():
-     if request.method == 'POST':
-         lugar= request.form['lugardetrabajo']
-         horario= request.form['horariolaboral']
-         puesto= request.form['puestolaboral']
-         siOno = request.form['trabajasiono']
-         #cursor = mysql.connection.cursor()
-         #cursor.execute("insert into info_laboral (Trabajando, Direccion_trabajo, Horario_Laboral, Puesto_Trabajo, Correo_PK_Info) values ('"+siOno+"', '"+lugar+"', '"+horario+"', '"+puesto+"','alan.hcris@gmail.com')")
-         #mysql.connection.commit()
-
-@app.route('/dashboard')
-def dashboard():
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM info_laboral")
-    data = cursor.fetchall()
-    cursor.close()
-    return render_template('dashboard.html', data=data)
-
-
-@app.route('/general')
+@app.route('/general', methods=['GET','POST'])
 def general():
      return render_template('Generales.html')
-
-@app.route("/general_r", methods=['POST'])
-def registro_general():
      if request.method == 'POST':
           nombre_gen = request.form['nombres']
           apellido_p = request.form['apellido_p']
@@ -50,14 +23,11 @@ def registro_general():
           colonia = request.form['colonia']
           nacionalidad = request.form['nacionalidad']
           f_nacimiento = request.form['f_nacimiento']
-          return estudios()
+          print('Datos generales guardados')
 
-@app.route('/estudios')
+@app.route('/estudios', methods=['GET', 'POST'])
 def estudios():
      return render_template('Estudios.html')
-
-@app.route('/estudios_r', methods=['POST'])
-def estudios_r():
      if request.method == 'POST':
           nivel_estudios = request.form['nivel']
           carrera = request.form['carrera']
@@ -65,7 +35,30 @@ def estudios_r():
           ciclo = request.form['ciclo']
           ingles = request.form['ingles']
           promedio = request.full_path['promedio']
-          return add_registro()
+          print('Datos estudiantiles guardados')
+
+@app.route('/laboral', methods=['GET','POST'])
+def add_registro():
+     return render_template('Laboral.html')
+     if request.method == 'POST':
+         lugar= request.form['lugardetrabajo']
+         horario= request.form['horariolaboral']
+         puesto= request.form['puestolaboral']
+         siOno = request.form['trabajasiono']
+         print('Datos laborales guardados')
+
+
+
+
+
+
+@app.route('/dashboard')
+def dashboard():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM info_laboral")
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('dashboard.html', data=data)
 
 
 @app.route('/inicio')
