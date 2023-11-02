@@ -21,7 +21,7 @@
     <div class="container">
       <!-- Logo -->
       <a class="navbar-brand" href="#">
-        <img src="{{ url_for('static', filename='css/img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
+        <img src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
       </a>
     </div>
   </nav>
@@ -32,25 +32,25 @@
           <h5 class="pb-2 text-center registro-text">REGISTRO</h5>
           <h5 class="pb-2 text-center datos-generales-text">Datos estudios</h5>
           <hr>
-          <form>
+          <form action="/estudios_r" method="post">
             <!-- Grupo 1 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
                 <label for="nivelInput">Universidad de procedencia</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="nivelInput" placeholder="Ingresa tu universidad de procedencia">
+                  <input type="text" class="form-control circular" id="nivelInput" placeholder="Ingresa tu universidad de procedencia" name="nivel">
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="carreraInput">Carrera de procedencia</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="carreraInput" placeholder="Ingresa tu carrera de procedencia">
+                  <input type="text" class="form-control circular" id="carreraInput" placeholder="Ingresa tu carrera de procedencia" name="carrera">
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="tituladoInput">Titulado</label>
                 <div class="form-group mb-3">
-                  <select class="form-select circular" id="tituladoInput">
+                  <select class="form-select circular" id="tituladoInput" name="titulado">
                     <option disabled selected>Selecciona una opción</option>
                     <option value="Si">Si</option>
                     <option value="No">No</option>
@@ -65,13 +65,13 @@
               <div class="col-md-4">
                 <label for="cicloInput">Ciclo escolar egreso</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="cicloInput" placeholder="Ingresa tu ciclo de egreso">
+                  <input type="text" class="form-control circular" id="cicloInput" placeholder="Ingresa tu ciclo de egreso" name="ciclo">
                 </div>
               </div>
               <div class="col-md-4">
                 <label for="nivelinglesInput">Nivel de ingles</label>
                 <div class="form-group mb-3">
-                  <select class="form-select circular" id="nivelinglesInput">
+                  <select class="form-select circular" id="nivelinglesInput" name="ingles">
                     <option disabled selected>Selecciona una opción</option>
                     <option value="A0: Principiante">A0: Principiante</option>
                     <option value="A1-A2: Básico">A1-A2: Básico</option>
@@ -85,7 +85,7 @@
               <div class="col-md-4">
                 <label for="promedioInput">Promedio</label>
                 <div class="form-group mb-3">
-                  <input type="text" class="form-control circular" id="promedioInput" placeholder="Ingresa tu promedio">
+                  <input type="text" class="form-control circular" id="promedioInput" placeholder="Ingresa tu promedio" name="promedio">
                 </div>
               </div>
             </div>

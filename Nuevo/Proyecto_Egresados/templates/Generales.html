@@ -19,7 +19,7 @@
     <div class="container">
       <!-- Logo -->
       <a class="navbar-brand" href="#">
-        <img src="{{ url_for('static', filename='css/img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
+        <img src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
       </a>
     </div>
   </nav>
@@ -30,7 +30,7 @@
           <h5 class="pb-2 text-center registro-text">REGISTRO</h5>
           <h5 class="pb-2 text-center datos-generales-text">Datos generales</h5>
           <hr>
-          <form>
+          <form action="/general_r" method="post">
             <!-- Grupo 1 de campos del formulario -->
             <div class="row">
               <div class="col-md-4">
