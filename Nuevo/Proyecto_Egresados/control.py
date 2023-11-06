@@ -65,6 +65,10 @@ def dashboard():
 def inicio():
      return render_template('inicio.html')
 
+@app.route('/login')
+def login():
+     return render_template('login.html')
+
 @app.route('/seleccion')
 def seleccion():
      return render_template('seleccion.html')

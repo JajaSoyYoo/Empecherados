@@ -25,7 +25,9 @@
       <div class="barra">
         <img src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="">
         <h5>Centro Universitario de Tonalá</h5>
-        <button class="inicio-sesion">INICIAR SESIÓN</button>
+          <form action="/login" method="get">
+        <button class="inicio-sesion" type="submit" >INICIAR SESIÓN</button>
+      </form>
       </div>
 
       <div class="introduccion">
