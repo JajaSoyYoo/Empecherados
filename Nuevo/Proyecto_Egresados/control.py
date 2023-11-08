@@ -8,10 +8,9 @@ app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta'
 mysql=MySQL(app)
 
-@app.route('/general', methods=['GET','POST'])
+@app.route('/general', methods=['GET', 'POST'])
 def general():
-     return render_template('Generales.html')
-     if request.method == 'POST':
+    if request.method == 'POST':
           nombre_gen = request.form['nombres']
           apellido_p = request.form['apellido_p']
           apellido_m = request.form['apellido_m']
@@ -25,12 +24,15 @@ def general():
           colonia = request.form['colonia']
           nacionalidad = request.form['nacionalidad']
           f_nacimiento = request.form['f_nacimiento']
-          print('Datos generales guardados')
+          print(telefono)
+          return redirect(url_for('estudios'))
+    
+    return render_template('Generales.html')
+          
 
 @app.route('/estudios', methods=['GET', 'POST'])
 def estudios():
-     return render_template('Estudios.html')
-     if request.method == 'POST':
+    if request.method == 'POST':
           nivel_estudios = request.form['nivel']
           carrera = request.form['carrera']
           titulado = request.form['titulado']
@@ -38,25 +40,26 @@ def estudios():
           ingles = request.form['ingles']
           promedio = request.full_path['promedio']
           print('Datos estudiantiles guardados')
+          return redirect(url_for('laborales'))
+
+    return render_template('Estudios.html')
 
 @app.route('/laboral', methods=['GET','POST'])
 def add_registro():
-     return render_template('Laboral.html')
-     if request.method == 'POST':
+    if request.method == 'POST':
          lugar= request.form['lugardetrabajo']
          horario= request.form['horariolaboral']
          puesto= request.form['puestolaboral']
          siOno = request.form['trabajasiono']
          print('Datos laborales guardados')
+    return render_template('Laboral.html')
 
 
-
-
-@app.before_request
-def before_request():
-    if 'user_id' not in session and request.endpoint != 'login':
-        flash('Debes iniciar sesión para acceder a esta página.', 'warning')
-        return redirect(url_for('login'))
+#@app.before_request
+#def before_request():
+#    if 'user_id' not in session and request.endpoint != 'login':
+#        flash('Debes iniciar sesión para acceder a esta página.', 'warning')
+#        return redirect(url_for('login'))
 
 @app.route('/dashboard')
 def dashboard():
