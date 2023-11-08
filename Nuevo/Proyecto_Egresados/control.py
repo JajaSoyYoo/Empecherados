@@ -99,9 +99,13 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/seleccion')
+@app.route('/seleccion', methods=['GET', 'POST'])
 def seleccion():
+     if request.method == 'POST': 
+          return redirect(url_for('general'))
+          
      return render_template('seleccion.html')
+
 
 
 def Error404(error):
