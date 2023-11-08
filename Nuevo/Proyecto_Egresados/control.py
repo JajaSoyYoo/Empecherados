@@ -38,20 +38,23 @@ def estudios():
           titulado = request.form['titulado']
           ciclo = request.form['ciclo']
           ingles = request.form['ingles']
-          promedio = request.full_path['promedio']
+          promedio = request.form['promedio']
           print('Datos estudiantiles guardados')
-          return redirect(url_for('laborales'))
+          return redirect(url_for('laboral'))
 
     return render_template('Estudios.html')
 
 @app.route('/laboral', methods=['GET','POST'])
-def add_registro():
+def laboral():
     if request.method == 'POST':
          lugar= request.form['lugardetrabajo']
          horario= request.form['horariolaboral']
          puesto= request.form['puestolaboral']
          siOno = request.form['trabajasiono']
          print('Datos laborales guardados')
+
+         return redirect(url_for('inicio'))
+    
     return render_template('Laboral.html')
 
 
