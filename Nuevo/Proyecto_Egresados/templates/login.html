@@ -23,29 +23,27 @@
       </a>
     </div>
   </nav>
-  <div class="banner">
-    <div class="container p-5 d-flex justify-content-center align-items-center">
-      <div class="card mx-3 mt-n5 shadow-lg circular" style="border-radius: 20px; border: none; width: 70%; max-width: 500px;">
-        <div class="card-body p-5">
-          <h5 class="pb-2 text-center inicio-sesion-text">INICIO DE SESIÓN</h5>
-          <hr>
-          <form id="loginForm">
-            <!-- Email field -->
-            <div class="mb-3">
-              <label for="emailInput" class="form-label">Correo electrónico</label>
-              <input type="text" name="correo" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
-            </div>
-            <!-- Password field -->
-            <div class="mb-3">
-              <label for="passwordInput" class="form-label">Contraseña</label>
-              <input type="password" name="password" class="form-control circular" id="passwordInput" placeholder="Ingresa tu contraseña" required>
-            </div>
-            <!-- Submit button -->
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E;">Iniciar sesión</button>
-            </div>
-          </form>
-        </div>
+  <div class="container p-5 d-flex justify-content-center align-items-center">
+    <div class="card mx-3 mt-n5 shadow-lg circular" style="border-radius: 20px; border: none; width: 70%; max-width: 500px;">
+      <div class="card-body p-5">
+        <h5 class="pb-2 text-center inicio-sesion-text">INICIO DE SESIÓN</h5>
+        <hr>
+        <form method="POST" action="/login"> <!-- El formulario envía una solicitud POST a la ruta /login -->
+          <!-- Email field -->
+          <div class="mb-3">
+            <label for="correoInput" class="form-label">Correo electrónico</label>
+            <input type="text" name="correo" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
+          </div>
+          <!-- Password field -->
+          <div class="mb-3">
+            <label for="contraInput" class="form-label">Contraseña</label>
+            <input type="password" name="contra" class="form-control circular" id="contraInput" placeholder="Ingresa tu contraseña" required>
+          </div>
+          <!-- Submit button -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="border-radius: 30px; background-color: #0C616E;">Iniciar sesión</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
