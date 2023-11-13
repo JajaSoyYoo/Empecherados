@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 
-
+global nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento
+global uni_proce, carrera, titulado, ciclo, ingles, promedio
 
 #from Nuevo.Proyecto_Egresados.control import model
 
@@ -34,13 +35,13 @@ def general():
 @app.route('/estudios', methods=['GET', 'POST'])
 def estudios():
     if request.method == 'POST':
-          nivel_estudios = request.form['nivel']
+          uni_proce = request.form['nivel']
           carrera = request.form['carrera']
           titulado = request.form['titulado']
           ciclo = request.form['ciclo']
           ingles = request.form['ingles']
           promedio = request.form['promedio']
-          print('Datos estudiantiles guardados')
+          insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo)
           return redirect(url_for('laboral'))
 
     return render_template('Estudios.html')
@@ -52,8 +53,10 @@ def laboral():
          horario= request.form['horariolaboral']
          puesto= request.form['puestolaboral']
          siOno = request.form['trabajasiono']
-         print('Datos laborales guardados')
-
+         sector = request.form['sector']
+         #insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
+         #insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio)
+         insertLaboral(lugar, horario, puesto, siOno, sector, correo)
          return redirect(url_for('inicio'))
     
     return render_template('Laboral.html')
@@ -117,5 +120,18 @@ def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_
      cursor.execute("insert into general (Nombres, Apellido_P, Apellido_M, Sexo, Tel_Contacto, Correo_ALumno, Codigo_Postal, Pais, Estado, Ciudad, Colonia, Nacionalidad, F_Nacimiento) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento))
      mysql.connection.commit()
      cursor.close()
+     mysql.connection.close()
 
-#      
+def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo):
+     cursor = mysql.connection.cursor()
+     cursor.execute("insert into grado_estudios values(%s, %s, %s, %s, %s, %s, %s);", (uni_proce, carrera, titulado, ciclo, ingles, promedio, correo))
+     mysql.connection.commit()
+     cursor.close()
+     mysql.connection.close()
+
+def insertLaboral(lugar, horario, puesto, siOno, sector):
+     cursor = mysql.connection.cursor()
+     cursor.execute("insert into info_laboral values(%s, %s, %s, %s, %s, %s, %s);", (siOno, lugar, horario, puesto, sector, correo))
+     mysql.connection.commit()
+     cursor.close()
+     mysql.connection.close()
