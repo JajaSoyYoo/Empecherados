@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_mysqldb import MySQL
 
 
+
 #from Nuevo.Proyecto_Egresados.control import model
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def general():
           colonia = request.form['colonia']
           nacionalidad = request.form['nacionalidad']
           f_nacimiento = request.form['f_nacimiento']
-          print(telefono)
+          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
           return redirect(url_for('estudios'))
     
     return render_template('Generales.html')
@@ -107,6 +108,14 @@ def seleccion():
      return render_template('seleccion.html')
 
 
-
 def Error404(error):
     return '<h1>Contacte a soporte tecnico</h1>'
+
+
+def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento):
+     cursor = mysql.connection.cursor()
+     cursor.execute("insert into general (Nombres, Apellido_P, Apellido_M, Sexo, Tel_Contacto, Correo_ALumno, Codigo_Postal, Pais, Estado, Ciudad, Colonia, Nacionalidad, F_Nacimiento) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento))
+     mysql.connection.commit()
+     cursor.close()
+
+#      
