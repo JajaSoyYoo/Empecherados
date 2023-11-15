@@ -1,66 +1,86 @@
-import sqlite3
 import smtplib
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from datetime import datetime
+from email.mime.base import MIMEBase
+from email import encoders
+from reportlab.pdfgen import canvas
+from io import BytesIO
+import mysql.connector
+import datetime
 
-# Crear una base de datos SQLite para almacenar información de profesores
-def crear_base_de_datos():
-    conn = sqlite3.connect('profesores.db')
-    cursor = conn.cursor()
+def crear_pdf(nombre, fecha_nacimiento):
+    # Crear un archivo PDF con el nombre y fecha de cumpleaños
+    today = datetime.date.today()
+    if today.month == fecha_nacimiento.month and today.day == fecha_nacimiento.day:
+        mensaje = f"Feliz cumpleaños, {nombre}!\n\n¡Te deseamos un día maravilloso!"
+        packet = BytesIO()
+        c = canvas.Canvas(packet)
+        c.drawString(100, 750, mensaje)
+        c.save()
+        packet.seek(0)
+        return packet
+    else:
+        return None
 
-    cursor.execute('''CREATE TABLE IF NOT EXISTS profesores
-                      (nombre TEXT, fecha_nacimiento TEXT)''')
+def enviar_correo(destinatario, asunto, mensaje, pdf_attachment):
+    remitente = "udgcorreos115@gmail.com"  # Reemplaza con tu dirección de correo
+    contraseña = "mtzy zsdn vwnx jwdx"  # Reemplaza con tu contraseña (o utiliza variables de entorno)
 
-    conn.commit()
-    conn.close()
+    # Configuración del servidor de correo
+    servidor = smtplib.SMTP('smtp.gmail.com', 587)
+    servidor.starttls()
+    servidor.login(remitente, contraseña)
 
-# Agregar un profesor a la base de datos
-def agregar_profesor(nombre, fecha_nacimiento):
-    conn = sqlite3.connect('profesores.db')
-    cursor = conn.cursor()
+    # Creación del correo
+    correo = MIMEMultipart()
+    correo['From'] = remitente
+    correo['To'] = destinatario
+    correo['Subject'] = asunto
 
-    cursor.execute("INSERT INTO profesores VALUES (?, ?)", (nombre, fecha_nacimiento))
+    # Adjuntar el PDF al correo si existe
+    if pdf_attachment:
+        pdf_filename = "mensaje.pdf"
+        pdf_attachment = MIMEBase('application', 'octet-stream')
+        pdf_attachment.set_payload(pdf_attachment.read())
+        encoders.encode_base64(pdf_attachment)
+        pdf_attachment.add_header('Content-Disposition', f'attachment; filename={pdf_filename}')
+        correo.attach(pdf_attachment)
 
-    conn.commit()
-    conn.close()
+    # Enviar el correo
+    servidor.send_message(correo)
+    servidor.quit()
 
-# Enviar correos de cumpleaños
-def enviar_correo_cumpleanios(destinatario, nombre, fecha_nacimiento):
-    hoy = datetime.now()
-    fecha_actual = hoy.strftime("%Y-%m-%d")
+def main():
+    # Conectarse a la base de datos
+    conexion = mysql.connector.connect(
+        host="tu_host",
+        user="tu_usuario",
+        password="tu_contraseña",
+        database="tu_base_de_datos"
+    )
+    cursor = conexion.cursor(dictionary=True)
 
-    if fecha_nacimiento == fecha_actual:
-        remitente = "udgcorreos115@gmail.com"
-        contraseña = "mtzy zsdn vwnx jwdx"  # Recuerda no incluir contraseñas en texto claro en tu código
+    # Obtener la fecha actual
+    today = datetime.date.today()
 
-        # Configuración del servidor de correo
-        servidor = smtplib.SMTP('smtp.gmail.com', 587)
-        servidor.starttls()
-        servidor.login(remitente, contraseña)
+    # Consulta para obtener profesores con cumpleaños hoy
+    consulta = f"SELECT nombre, fecha_nacimiento, correo FROM profesores WHERE DAY(fecha_nacimiento) = {today.day} AND MONTH(fecha_nacimiento) = {today.month}"
+    cursor.execute(consulta)
 
-        # Creación del correo
-        correo = MIMEMultipart()
-        correo['From'] = remitente
-        correo['To'] = destinatario
-        correo['Subject'] = "¡Feliz Cumpleaños!"
+    for profesor in cursor:
+        nombre = profesor['nombre']
+        fecha_nacimiento = profesor['fecha_nacimiento']
+        correo = profesor['correo']
+        pdf_attachment = crear_pdf(nombre, fecha_nacimiento)
 
-        # Mensaje de felicitación
-        mensaje = f"¡Feliz Cumpleaños, {nombre}! Esperamos que tengas un día maravilloso."
-        correo.attach(MIMEText(mensaje, 'plain'))
+        if pdf_attachment:
+            # Enviar correo de felicitación
+            asunto = f"Feliz cumpleaños, {nombre}!"
+            mensaje = f"Feliz cumpleaños, {nombre}!\n\n¡Te deseamos un día maravilloso!"
+            enviar_correo(correo, asunto, mensaje, pdf_attachment)
 
-        # Enviar el correo
-        servidor.send_message(correo)
-        servidor.quit()
+    cursor.close()
+    conexion.close()
 
-# Uso de las funciones
-# Crear la base de datos
-crear_base_de_datos()
+if __name__ == "__main":
+    main()
 
-# Agregar profesores (nombre, fecha de nacimiento) a la base de datos
-agregar_profesor("Profesor 1", "2023-10-28")
-agregar_profesor("Profesor 2", "2000-05-15")
-
-# Enviar correos de cumpleaños si es el cumpleaños del profesor
-enviar_correo_cumpleanios("correo_profesor1@gmail.com", "Profesor 1", "2023-10-28")
-enviar_correo_cumpleanios("correo_profesor2@gmail.com", "Profesor 2", "2000-05-15")
