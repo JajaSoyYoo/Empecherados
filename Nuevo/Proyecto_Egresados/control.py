@@ -65,6 +65,7 @@ def laboral():
          #insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
          #insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio)
          insertLaboral(lugar, horario, puesto, siOno, sector, get_var())
+         flash('Registro completo')
          return redirect(url_for('inicio'))
     
     return render_template('Laboral.html')
@@ -92,11 +93,11 @@ def inicio():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        correo = request.form['correo']
+        correoCor = request.form['correoCor']
         contra = request.form['contra']
 
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM cordis WHERE Correo_Cordinador = %s AND contra = %s", (correo, contra))
+        cursor.execute("SELECT * FROM cordis WHERE Correo_Cordinador = %s AND contra = %s", (correoCor, contra))
         user = cursor.fetchone()
         cursor.close()
 
