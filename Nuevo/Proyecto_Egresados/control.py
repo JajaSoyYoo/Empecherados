@@ -1,8 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 
-global nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento
+global nombre_gen, apellido_p, apellido_m, sexo, telefono, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento
 global uni_proce, carrera, titulado, ciclo, ingles, promedio
+
+correo = None
+def get_var():
+     return correo
+
+def set_var(x):
+     global correo
+     correo = x
 
 #from Nuevo.Proyecto_Egresados.control import model
 
@@ -18,7 +26,7 @@ def general():
           apellido_m = request.form['apellido_m']
           sexo = request.form['sexo']
           telefono = request.form['tel_contacto']
-          correo = request.form['correo_alumno']
+          set_var(request.form['correo_alumno'])
           c_postal = request.form['codigo_postal']
           pais = request.form['pais']
           estado = request.form['estado']
@@ -26,7 +34,7 @@ def general():
           colonia = request.form['colonia']
           nacionalidad = request.form['nacionalidad']
           f_nacimiento = request.form['f_nacimiento']
-          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
+          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, get_var(), c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
           return redirect(url_for('estudios'))
     
     return render_template('Generales.html')
@@ -41,7 +49,7 @@ def estudios():
           ciclo = request.form['ciclo']
           ingles = request.form['ingles']
           promedio = request.form['promedio']
-          insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo)
+          insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, get_var())
           return redirect(url_for('laboral'))
 
     return render_template('Estudios.html')
@@ -56,7 +64,7 @@ def laboral():
          sector = request.form['sector']
          #insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
          #insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio)
-         insertLaboral(lugar, horario, puesto, siOno, sector, correo)
+         insertLaboral(lugar, horario, puesto, siOno, sector, get_var())
          return redirect(url_for('inicio'))
     
     return render_template('Laboral.html')
@@ -131,7 +139,7 @@ def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo
 
 def insertLaboral(lugar, horario, puesto, siOno, sector):
      cursor = mysql.connection.cursor()
-     cursor.execute("insert into info_laboral values(%s, %s, %s, %s, %s, %s, %s);", (siOno, lugar, horario, puesto, sector, correo))
+     cursor.execute("insert into info_laboral values(%s, %s, %s, %s, %s, %s);", (siOno, lugar, horario, puesto, sector, correo))
      mysql.connection.commit()
      cursor.close()
      mysql.connection.close()
