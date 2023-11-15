@@ -137,7 +137,7 @@ def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo
      cursor.close()
      mysql.connection.close()
 
-def insertLaboral(lugar, horario, puesto, siOno, sector):
+def insertLaboral(lugar, horario, puesto, siOno, sector, correo):
      cursor = mysql.connection.cursor()
      cursor.execute("insert into info_laboral values(%s, %s, %s, %s, %s, %s);", (siOno, lugar, horario, puesto, sector, correo))
      mysql.connection.commit()
