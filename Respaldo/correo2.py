@@ -1,86 +1,94 @@
+import mysql.connector
 import smtplib
 from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 from reportlab.pdfgen import canvas
-from io import BytesIO
-import mysql.connector
-import datetime
+from datetime import datetime
+import io
+from reportlab.lib import colors
 
+
+# Configuración de la conexión a la base de datos MySQL
+db_config = {
+    "host": "localhost",
+    "user": "root",
+    "password": "root",
+    "database": "cumpleaños"
+}
+
+# Conectarse a la base de datos
+conn = mysql.connector.connect(**db_config)
+cursor = conn.cursor()
+
+# Obtener la fecha actual
+hoy = datetime.now()
+fecha_actual = hoy.strftime("%Y-%m-%d")
+
+# Consultar profesores cuyo cumpleaños es hoy
+consulta = f"SELECT nombre, correo, fecha_nacimiento FROM profesores WHERE DATE_FORMAT(fecha_nacimiento, '%m-%d') = DATE_FORMAT('{fecha_actual}', '%m-%d')"
+cursor.execute(consulta)
+resultados = cursor.fetchall()
+
+# Configuración del servidor de correo
+remitente = "udgcorreos115@gmail.com"
+contraseña = "mtzy zsdn vwnx jwdx"  # Recuerda no incluir contraseñas en texto claro en tu código
+servidor = smtplib.SMTP('smtp.gmail.com', 587)
+servidor.starttls()
+servidor.login(remitente, contraseña)
+
+# Función para crear un PDF personalizado de felicitación
 def crear_pdf(nombre, fecha_nacimiento):
-    # Crear un archivo PDF con el nombre y fecha de cumpleaños
-    today = datetime.date.today()
-    if today.month == fecha_nacimiento.month and today.day == fecha_nacimiento.day:
-        mensaje = f"Feliz cumpleaños, {nombre}!\n\n¡Te deseamos un día maravilloso!"
-        packet = BytesIO()
-        c = canvas.Canvas(packet)
-        c.drawString(100, 750, mensaje)
-        c.save()
-        packet.seek(0)
-        return packet
-    else:
-        return None
+    packet = io.BytesIO()
+    c = canvas.Canvas(packet)
+    
+    # Cambiar el color y tamaño de la fuente
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(colors.red)  # Puedes cambiar el color según tus preferencias
 
-def enviar_correo(destinatario, asunto, mensaje, pdf_attachment):
-    remitente = "udgcorreos115@gmail.com"  # Reemplaza con tu dirección de correo
-    contraseña = "mtzy zsdn vwnx jwdx"  # Reemplaza con tu contraseña (o utiliza variables de entorno)
+    # Agregar texto al PDF
+    c.drawString(100, 750, f"¡Feliz Cumpleaños, {nombre}!")
+    c.drawString(100, 730, "Esperamos que tengas un día maravilloso.")
 
-    # Configuración del servidor de correo
-    servidor = smtplib.SMTP('smtp.gmail.com', 587)
-    servidor.starttls()
-    servidor.login(remitente, contraseña)
+    # Cambiar color y tamaño para el siguiente texto
+    c.setFont("Helvetica", 12)
+    c.setFillColor(colors.black)
+
+    # Agregar más texto si es necesario
+    # ...
+
+    c.save()
+    packet.seek(0)
+    return packet
+
+# Enviar correos de cumpleaños con PDF personalizado
+for nombre, correo_destinatario, fecha_nacimiento in resultados:
+    # Crear el PDF personalizado
+    pdf = crear_pdf(nombre, fecha_nacimiento)
+
+    # Adjuntar el PDF al correo
+    pdf_attachment = MIMEApplication(pdf.read(), _subtype="pdf")
+    pdf_attachment.add_header('Content-Disposition', f'attachment; filename=felicitacion_{nombre}.pdf')
 
     # Creación del correo
-    correo = MIMEMultipart()
-    correo['From'] = remitente
-    correo['To'] = destinatario
-    correo['Subject'] = asunto
+    correo_enviar = MIMEMultipart()
+    correo_enviar['From'] = remitente
+    correo_enviar['To'] = correo_destinatario
+    correo_enviar['Subject'] = "¡Feliz Cumpleaños!"
 
-    # Adjuntar el PDF al correo si existe
-    if pdf_attachment:
-        pdf_filename = "mensaje.pdf"
-        pdf_attachment = MIMEBase('application', 'octet-stream')
-        pdf_attachment.set_payload(pdf_attachment.read())
-        encoders.encode_base64(pdf_attachment)
-        pdf_attachment.add_header('Content-Disposition', f'attachment; filename={pdf_filename}')
-        correo.attach(pdf_attachment)
+    # Mensaje de felicitación
+    mensaje = f"¡Feliz Cumpleaños, {nombre}! Esperamos que tengas un día maravilloso."
+    correo_enviar.attach(MIMEText(mensaje, 'plain'))
 
-    # Enviar el correo
-    servidor.send_message(correo)
-    servidor.quit()
+    # Adjuntar el PDF
+    correo_enviar.attach(pdf_attachment)
 
-def main():
-    # Conectarse a la base de datos
-    conexion = mysql.connector.connect(
-        host="tu_host",
-        user="tu_usuario",
-        password="tu_contraseña",
-        database="tu_base_de_datos"
-    )
-    cursor = conexion.cursor(dictionary=True)
+    # Convertir el correo a cadena y enviarlo directamente con sendmail
+    cuerpo_correo = correo_enviar.as_string()
+    servidor.sendmail(remitente, [correo_destinatario], cuerpo_correo)
+    
+# Cerrar la conexión con la base de datos
+conn.close()
 
-    # Obtener la fecha actual
-    today = datetime.date.today()
-
-    # Consulta para obtener profesores con cumpleaños hoy
-    consulta = f"SELECT nombre, fecha_nacimiento, correo FROM profesores WHERE DAY(fecha_nacimiento) = {today.day} AND MONTH(fecha_nacimiento) = {today.month}"
-    cursor.execute(consulta)
-
-    for profesor in cursor:
-        nombre = profesor['nombre']
-        fecha_nacimiento = profesor['fecha_nacimiento']
-        correo = profesor['correo']
-        pdf_attachment = crear_pdf(nombre, fecha_nacimiento)
-
-        if pdf_attachment:
-            # Enviar correo de felicitación
-            asunto = f"Feliz cumpleaños, {nombre}!"
-            mensaje = f"Feliz cumpleaños, {nombre}!\n\n¡Te deseamos un día maravilloso!"
-            enviar_correo(correo, asunto, mensaje, pdf_attachment)
-
-    cursor.close()
-    conexion.close()
-
-if __name__ == "__main":
-    main()
-
+# Cerrar la conexión con el servidor de correo
+servidor.quit()
