@@ -12,51 +12,51 @@ body, html{
   padding-top: 5px;
   background-color: #FDFDFD;
 }
-
 .barra {
   background-color: #549099;
-  background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #549099 10px ), repeating-linear-gradient( #0C616E55, #0C616E );
+  background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #549099 10px), repeating-linear-gradient(#0C616E55, #0C616E);
   height: 90px;
   display: flex;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  
-  border: 1px solid #ccc;
 }
 
-.barra img{
-    height: 60px;
-    margin-left: 50px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+.barra img {
+  height: 60px;
+  margin-left: 50px;
+  margin-right: 10px;
+  border-radius: 8px;
 }
 
-.barra h5{
+.barra h5 {
   color: white;
 }
 
-.inicio-sesion{
-    background-color: #0C616E; 
-    color: #fff; 
-    border: 1px solid #ccc;
-    border-radius: 5px; 
-    font-size: 1em; 
-    outline: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    display: block;
-    margin: auto;
-    margin-right: 50px;
-    padding: 5px;
+.inicio-sesion {
+  background-color: #0C616E;
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: auto;
+  margin-left: auto;
+  margin-right: 40px; /* Añadido para dar un espacio a la derecha */
+  padding: 5px;
 }
+
+form {
+  margin-left: auto;
+}
+
 
 .introduccion{
   background-color: #30707a;
   height: 110px;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  border: 1px solid #ccc;
   margin-top: 20px;
   margin-bottom: 20px;
 }

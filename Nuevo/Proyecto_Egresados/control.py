@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 global nombre_gen, apellido_p, apellido_m, sexo, telefono, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento
 global uni_proce, carrera, titulado, ciclo, ingles, promedio
@@ -65,6 +68,13 @@ def laboral():
          #insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
          #insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio)
          insertLaboral(lugar, horario, puesto, siOno, sector, get_var())
+
+         destinatario = get_var()  # Usando el correo registrado
+         asunto = "Confirmación de Registro"
+         mensaje = "Gracias por registrarte. Tu información laboral ha sido recibida con éxito."
+         
+         enviar_correo(destinatario, asunto, mensaje)
+    
          flash('Registro completo')
          return redirect(url_for('inicio'))
     
@@ -80,7 +90,7 @@ def laboral():
 @app.route('/dashboard')
 def dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM info_laboral")
+    cursor.execute("SELECT general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, grado_estudios.Uni_procedencia, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
     data = cursor.fetchall()
     cursor.close()
     return render_template('dashboard.html', data=data)
@@ -144,3 +154,25 @@ def insertLaboral(lugar, horario, puesto, siOno, sector, correo):
      mysql.connection.commit()
      cursor.close()
      mysql.connection.close()
+
+def enviar_correo(destinatario, asunto, mensaje):
+    remitente = "udgcorreos115@gmail.com"
+    contraseña = "mtzy zsdn vwnx jwdx"
+
+    # Configuración del servidor de correo
+    servidor = smtplib.SMTP('smtp.gmail.com', 587)
+    servidor.starttls()
+    servidor.login(remitente, contraseña)
+
+    # Creación del correo
+    correo = MIMEMultipart()
+    correo['From'] = remitente
+    correo['To'] = destinatario
+    correo['Subject'] = asunto
+
+    # Agregar el mensaje al correo
+    correo.attach(MIMEText(mensaje, 'plain'))
+
+    # Enviar el correo
+    servidor.send_message(correo)
+    servidor.quit()

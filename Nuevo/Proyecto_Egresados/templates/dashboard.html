@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style4.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
@@ -16,33 +17,30 @@
 <body>
     <div class="principal">
         <div class="barra">
-            <img class="logo" src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="">
-            <h6 class="titulo">Control de Régistros</h6>
+            <img class="logo" src="{{ url_for('static', filename='img/cutonala.png') }}" alt="">
             <p class="usuario">Nombre Usuario</p>
             <img class="user" src="{{ url_for('static', filename='img/usuario.png') }}" alt="">
         </div>
-        
+    
         <div class="contenedor">
             <aside class="barra-lateral">
               <h6>CARRERA DEL COORDINADOR</h6>
-              <button type="button" class="boton">Inicio</button>
-              <button type="button" class="boton">Generales</button>
-              <button type="button" class="boton">Estudio</button>
-              <button type="button" class="boton">Laboral</button>
+              <button type="button" class="boton">Aspirantes</button>
+
             </aside>
             <main class="main">
                 <div class="registros">
                     <p>ASPIRANTES REGISTRADOS</p>
-                    <h6>18</h6>
+                    <h6>{{ data|length }}</h6>
                 </div>
                 <div class="datos">
                     <div class="buscador">
                         <h6>INFORMACIÓN DE ASPIRANTES</h6>
+                        <div class="button-container">
                         <button class="button" onclick="tableToExcel()">Generar Excel</button>
-                    <div class="buscador2">                     
-                      <input type="search" class="buscar" placeholder="Buscar...">
-                  </div>
-                    <div class="contenedor-tabla">
+                        </div>
+                    </div>
+                    <div class="table-responsive contenedor-tabla">
                         <div class="tablas">
                             <table class="table table-striped">
                               <thead>
@@ -60,7 +58,6 @@
                                     <th scope="col">Nombres</th>
                                                     <th scope="col">Apellido Paterno</th>
                                                     <th scope="col">Apellido Materno</th>
-                                                    <th scope="col">Posgrado</th>
                                                     <th scope="col">Sexo</th>
                                                     <th scope="col">Teléfono de Contacto</th>
                                                     <th scope="col">Correo</th>
@@ -84,34 +81,36 @@
                                                     <th scope="col">Sector</th>
                                   </tr>
                                 <tbody>
+                            
                                   {% for row in data %}
                                                 <!-- Aquí puedes agregar las filas de la tabla con información de la base de datos -->
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ loop.index }}</td>
                                                     <td>{{ row[0] }}</td>
                                                     <td>{{ row[1] }}</td>
                                                     <td>{{ row[2] }}</td>
                                                     <td>{{ row[3] }}</td>
                                                     <td>{{ row[4] }}</td>
+                                                    <td>{{ row[5] }}</td>
+                                                    <td>{{ row[6] }}</td>
+                                                    <td>{{ row[7] }}</td>
+                                                    <td>{{ row[8] }}</td>
+                                                    <td>{{ row[9] }}</td>
+                                                    <td>{{ row[10] }}</td>
+                                                    <td>{{ row[11] }}</td>
+                                                    <td>{{ row[12] }}</td>
+                                                    <td>{{ row[13] }}</td>
+                                                    <td>{{ row[14] }}</td>
+                                                    <td>{{ row[15] }}</td>
+                                                    <td>{{ row[16] }}</td>
+                                                    <td>{{ row[17] }}</td>
+                                                    <td>{{ row[18] }}</td>
+                                                    <td>{{ row[19] }}</td>
+                                                    <td>{{ row[20] }}</td>
+                                                    <td>{{ row[21] }}</td>
+                                                    <td>{{ row[22] }}</td>
+                                                    <td>{{ row[23] }}</td>
+                                                    <td>{{ row[24] }}</td>
                                                 </tr>
                                                 {% endfor %}
                                 </tbody>
