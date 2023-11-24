@@ -16,14 +16,14 @@
 </head>
 <body>
     <!-- Barra de navegación -->
-  <nav class="navbar navbar-expand-lg navbar-color">
-    <div class="container">
-      <!-- Logo -->
-      <a class="navbar-brand" href="#">
-        <img src="{{ url_for('static', filename='css/img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
-      </a>
+    <div class="navbar navbar-expand-lg navbar-color">
+      <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='img/cutonala.png') }}" alt="Tu Logo" width="120" height="50" class="d-inline-block align-top logo-with-shadow">
+        </a>
+      </div>
     </div>
-  </nav>
   <div class="banner">
     <div class="container p-5">
       <div class="card mx-3 mt-n5 shadow-lg circular" style="border-radius: 40px; border: none">
@@ -31,7 +31,7 @@
           <h5 class="pb-2 text-center registro-text">REGISTRO</h5>
           <h5 class="pb-2 text-center datos-generales-text">Informacion laboral</h5>
           <hr>
-          <form action="/laboral" method="POST" >
+          <form action="/laboral" method="POST" onsubmit="return confirmarEnvio()">
             <!-- Grupo 1 de campos del formulario -->
             <div class="row">
                 <div class="col-md-4">
@@ -93,6 +93,12 @@
   </div>
 
   <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script>
+    function confirmarEnvio() {
+        // Mostrar una alerta y preguntar al usuario si está seguro de enviar los datos
+        return confirm("¿Seguro que quieres enviar tus datos?");
+    }
+</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LE"></script>
 </body>
 </html>

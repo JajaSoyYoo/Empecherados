@@ -120,7 +120,6 @@ body, html{
 .buscador{
   padding: 25px 15px 20px 15px;
   background-color: white;
-  display: flex;
   align-items: center;
   justify-content: space-between;
   border: .5px solid #eeeeee;

@@ -15,14 +15,14 @@
 </head>
 <body>
   <!-- Barra de navegación -->
-  <nav class="navbar navbar-expand-lg navbar-color">
+  <div class="navbar navbar-expand-lg navbar-color">
     <div class="container">
       <!-- Logo -->
       <a class="navbar-brand" href="#">
-        <img src="{{ url_for('static', filename='img/LogoCUT.png') }}" alt="Tu Logo" width="109" height="48" class="d-inline-block align-top logo-with-shadow">
+        <img src="{{ url_for('static', filename='img/cutonala.png') }}" alt="Tu Logo" width="120" height="50" class="d-inline-block align-top logo-with-shadow">
       </a>
     </div>
-  </nav>
+  </div>
   <div class="container p-5 d-flex justify-content-center align-items-center">
     <div class="card mx-3 mt-n5 shadow-lg circular" style="border-radius: 20px; border: none; width: 70%; max-width: 500px;">
       <div class="card-body p-5">
@@ -32,7 +32,7 @@
           <!-- Email field -->
           <div class="mb-3">
             <label for="correoInput" class="form-label">Correo electrónico</label>
-            <input type="text" name="correo" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
+            <input type="email" name="correoCor" class="form-control circular" id="correoInput" placeholder="Ingresa tu correo" required>
           </div>
           <!-- Password field -->
           <div class="mb-3">
