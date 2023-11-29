@@ -90,7 +90,7 @@ def laboral():
 @app.route('/dashboard')
 def dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, grado_estudios.Uni_procedencia, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
+    cursor.execute("SELECT general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, grado_estudios.Uni_Proce, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
     data = cursor.fetchall()
     cursor.close()
     return render_template('dashboard.html', data=data)
