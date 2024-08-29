@@ -4,8 +4,6 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-global nombre_gen, apellido_p, apellido_m, sexo, telefono, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento
-global uni_proce, carrera, titulado, ciclo, ingles, promedio
 
 correo = None
 def get_var():
@@ -60,14 +58,14 @@ def estudios():
 @app.route('/laboral', methods=['GET','POST'])
 def laboral():
     if request.method == 'POST':
+         siOno = request.form['trabajasiono']
          lugar= request.form['lugardetrabajo']
          horario= request.form['horariolaboral']
          puesto= request.form['puestolaboral']
-         siOno = request.form['trabajasiono']
          sector = request.form['sector']
          #insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
          #insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio)
-         insertLaboral(lugar, horario, puesto, siOno, sector, get_var())
+         insertLaboral(siOno, lugar, horario, puesto, sector, get_var())
 
          destinatario = get_var()  # Usando el correo registrado
          asunto = "Confirmación de Registro"
@@ -148,7 +146,7 @@ def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo
      cursor.close()
      mysql.connection.close()
 
-def insertLaboral(lugar, horario, puesto, siOno, sector, correo):
+def insertLaboral(siOno, lugar, horario, puesto, sector, correo):
      cursor = mysql.connection.cursor()
      cursor.execute("insert into info_laboral values(%s, %s, %s, %s, %s, %s);", (siOno, lugar, horario, puesto, sector, correo))
      mysql.connection.commit()
