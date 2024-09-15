@@ -3,7 +3,7 @@ class DevelopmentConfig():
     MYSQL_HOST = 'localhost'
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = 'root'
-    MYSQL_DB = 'seg_egresados2'
+    MYSQL_DB = 'seg_egresados5'
 
 
 config = {

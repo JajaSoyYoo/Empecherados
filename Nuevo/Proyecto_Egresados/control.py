@@ -5,7 +5,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import secrets
 import string
+import mysql.connector
 import random
+
 
 correo = None
 def get_var():
@@ -37,11 +39,14 @@ def general():
           colonia = request.form['colonia']
           nacionalidad = request.form['nacionalidad']
           f_nacimiento = request.form['f_nacimiento']
-          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, get_var(), c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento)
+          
+          # Obtener las carreras de interés de la sesión
+          carreras_interes = session.get('carreras_interes', '[]')
+          
+          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, get_var(), c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes)
           return redirect(url_for('estudios'))
     
     return render_template('Generales.html')
-          
 
 @app.route('/estudios', methods=['GET', 'POST'])
 def estudios():
@@ -57,6 +62,7 @@ def estudios():
 
     return render_template('Estudios.html')
 
+
 @app.route('/laboral', methods=['GET', 'POST'])
 def laboral():
     if request.method == 'POST':
@@ -66,29 +72,38 @@ def laboral():
          puesto= request.form['puestolaboral']
          sector = request.form['sector']
          
-         contrasena = insertLaboral(siOno, lugar, horario, puesto, sector, get_var())
+         contrasena, correo_usuario = insertLaboral(siOno, lugar, horario, puesto, sector, get_var())
 
-         destinatario = get_var()  # Usando el correo registrado
+         destinatario = correo_usuario  # Usando el correo registrado
          asunto = "Confirmación de Registro"
-         mensaje = "Gracias por registrarte. Tu información laboral ha sido recibida con éxito."
+         mensaje_base = "Gracias por registrarte. Tu información ha sido recibida con éxito."
+         mensaje_extra = """
+         
+         Bienvenido a nuestra comunidad de egresados.
 
-         enviar_correo(destinatario, asunto, mensaje, contrasena)
+         Nos complace informarte que tu información ha sido registrada con éxito. Gracias por tu interés en nuestros programas de posgrado.
+
+         Para obtener más información y continuar con el proceso, por favor, inicia sesión con la cuenta y contraseña que se te proporcionaron en este correo. Puedes hacerlo a través del siguiente enlace: LINK DEL LOGIN.
+
+         Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.
+
+         ¡Que tengas un excelente día!
+
+
+         """
+
+         enviar_correo(destinatario, asunto, mensaje_base, contrasena, correo_usuario, mensaje_extra)
     
          flash('Registro completo')
          return redirect(url_for('inicio'))
     
     return render_template('Laboral.html')
 
-#@app.before_request
-#def before_request():
-#    if 'user_id' not in session and request.endpoint != 'login':
-#        flash('Debes iniciar sesión para acceder a esta página.', 'warning')
-#        return redirect(url_for('login'))
 
 @app.route('/dashboard')
 def dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, grado_estudios.Uni_proce, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
+    cursor.execute("SELECT  general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, general.carreras_interes,  grado_estudios.Uni_proce, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
     data = cursor.fetchall()
     cursor.close()
     return render_template('dashboard.html', data=data)
@@ -122,7 +137,14 @@ def login():
 
 @app.route('/seleccion', methods=['GET', 'POST'])
 def seleccion():
-     if request.method == 'POST': 
+     if request.method == 'POST':
+          tipo_posgrado = request.form.get('posgradoInput')
+          selecciones = request.form.get('seleccionesPosgrado')
+          
+          # Guardar las selecciones en la sesión para usarlas más tarde
+          session['tipo_posgrado'] = tipo_posgrado
+          session['carreras_interes'] = selecciones
+          
           return redirect(url_for('general'))
           
      return render_template('seleccion.html')
@@ -131,22 +153,23 @@ def seleccion():
 def Error404(error):
     return '<h1>Contacte a soporte tecnico</h1>'
 
-
-def generar_contrasena(longitud=8):
-    caracteres = string.ascii_letters + string.digits + string.punctuation
+def generar_contrasena(longitud=10):
+    caracteres = string.ascii_letters + string.digits
     contrasena = ''.join(random.choice(caracteres) for i in range(longitud))
     return contrasena
 
-def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento):
+def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes):
      cursor = mysql.connection.cursor()
-     cursor.execute("insert into general (Nombres, Apellido_P, Apellido_M, Sexo, Tel_Contacto, Correo_Alumno, Codigo_Postal, Pais, Estado, Ciudad, Colonia, Nacionalidad, F_Nacimiento) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento))
+     cursor.execute("INSERT INTO general (nombre, apellidoP, apellidoM, sexo, celular, Correo_Alumno, codigoPostal, Pais, Estado, Ciudad, Colonia, Nacionalidad, fechaNacimiento, posgrado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", 
+                    (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes))
      mysql.connection.commit()
      cursor.close()
      mysql.connection.close()
 
 def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo):
      cursor = mysql.connection.cursor()
-     cursor.execute("insert into grado_estudios values(%s, %s, %s, %s, %s, %s, %s);", (uni_proce, carrera, titulado, ciclo, ingles, promedio, correo))
+     cursor.execute("INSERT INTO estudios (Correo_A, centroUniversitario, carrera, titulado, cicloEgreso, nivelIngles, Promedio) VALUES (%s, %s, %s, %s, %s, %s, %s);", 
+                    (correo, uni_proce, carrera, titulado, ciclo, ingles, promedio))
      mysql.connection.commit()
      cursor.close()
      mysql.connection.close()
@@ -155,20 +178,21 @@ def insertLaboral(siOno, lugar, horario, puesto, sector, correo):
     contrasena = generar_contrasena()  # Generar una contraseña aleatoria
 
     cursor = mysql.connection.cursor()
-    cursor.execute("INSERT INTO info_laboral (Trabajando, Direccion_trabajo, Horario_Laboral, Puesto_Trabajo, Sector, Correo_PK_Info) VALUES (%s, %s, %s, %s, %s, %s);", 
+    cursor.execute("INSERT INTO laboral (estatus, nombre, Horario_Laboral, Puesto_Trabajo, Sector, Correo_Alu) VALUES (%s, %s, %s, %s, %s, %s);", 
                    (siOno, lugar, horario, puesto, sector, correo))
     mysql.connection.commit()
 
     # Insertar la cuenta y contraseña en la base de datos
-    cursor.execute("INSERT INTO usuarios (correo, contrasena) VALUES (%s, %s);", (correo, contrasena))
+    cursor.execute("INSERT INTO cuenta (correo, clave) VALUES (%s, %s);", (correo, contrasena))
     mysql.connection.commit()
 
     cursor.close()
     mysql.connection.close()
 
-    return contrasena  # Retornar la contraseña generada
+    return contrasena, correo  # Retornar la contraseña generada
 
-def enviar_correo(destinatario, asunto, mensaje, contrasena=None):
+
+def enviar_correo(destinatario, asunto, mensaje_base, contrasena=None, correo_usuario=None, mensaje_extra=None):
     remitente = "udgcorreos115@gmail.com"
     contraseña = "mtzy zsdn vwnx jwdx"
 
@@ -183,10 +207,82 @@ def enviar_correo(destinatario, asunto, mensaje, contrasena=None):
     correo['To'] = destinatario
     correo['Subject'] = asunto
 
-    # Agregar el mensaje al correo
-    if contrasena:
-        mensaje += f"\n\nTu contraseña es: {contrasena}"
-    correo.attach(MIMEText(mensaje, 'plain'))
+    # Diseño mejorado del correo en HTML
+    mensaje_html = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+            }}
+            .header {{
+                background-color: #003366;
+                color: white;
+                padding: 20px;
+                text-align: center;
+                border-radius: 5px 5px 0 0;
+            }}
+            .content {{
+                background-color: white;
+                padding: 20px;
+                border-radius: 0 0 5px 5px;
+            }}
+            .footer {{
+                text-align: center;
+                margin-top: 20px;
+                font-size: 0.8em;
+                color: #666666;
+            }}
+            .highlight {{
+                background-color: #fffacd;
+                padding: 10px;
+                border-radius: 5px;
+                margin: 10px 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Bienvenido a Nuestra Comunidad de Egresados</h1>
+            </div>
+            <div class="content">
+                <p>{mensaje_base}</p>
+    """
+
+    if correo_usuario and contrasena:
+        mensaje_html += f"""
+                <div class="highlight">
+                    <p><strong>Tu correo registrado:</strong> {correo_usuario}</p>
+                    <p><strong>Tu contraseña:</strong> <span style="font-size: 1.2em; background-color: #e6f2ff; padding: 5px; border-radius: 3px;">{contrasena}</span></p>
+                </div>
+        """
+    
+    if mensaje_extra:
+        mensaje_html += f"<p>{mensaje_extra}</p>"
+
+    mensaje_html += """
+                <p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>
+                <p>¡Que tengas un excelente día!</p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2024 Universidad de Guadalajara. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    correo.attach(MIMEText(mensaje_html, 'html'))
 
     # Enviar el correo
     servidor.send_message(correo)
