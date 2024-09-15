@@ -116,17 +116,18 @@ def inicio():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        correoCor = request.form['correoCor']
-        contra = request.form['contra']
+        correo = request.form['correo']  # Cambiado a 'correo'
+        clave = request.form['clave']  # Cambiado a 'clave'
 
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM cordis WHERE Correo_Cordinador = %s AND contra = %s", (correoCor, contra))
+        # Cambiada la consulta para coincidir con la tabla 'cuenta' y usar las columnas correctas
+        cursor.execute("SELECT * FROM cuenta WHERE correo = %s AND clave = %s", (correo, clave))
         user = cursor.fetchone()
         cursor.close()
 
         if user:
             # Autenticación exitosa, establecer una sesión para el usuario.
-            session['user_id'] = user[0]  # Accede al primer valor en la tupla (Correo_Cordinador)
+            session['user_id'] = user[2]  # Accede al primer valor en la tupla (idCuenta)
             return redirect(url_for('dashboard'))
         else:
             # Autenticación fallida
