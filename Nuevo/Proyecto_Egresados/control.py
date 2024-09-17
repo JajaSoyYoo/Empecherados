@@ -7,6 +7,7 @@ import secrets
 import string
 import mysql.connector
 import random
+import hashlib
 
 
 correo = None
@@ -116,23 +117,30 @@ def inicio():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        correo = request.form['correo']  # Cambiado a 'correo'
-        clave = request.form['clave']  # Cambiado a 'clave'
+        correo = request.form['correo']
+        clave = request.form['clave']
 
         cursor = mysql.connection.cursor()
-        # Cambiada la consulta para coincidir con la tabla 'cuenta' y usar las columnas correctas
-        cursor.execute("SELECT * FROM cuenta WHERE correo = %s AND clave = %s", (correo, clave))
-        user = cursor.fetchone()
-        cursor.close()
-
-        if user:
-            # Autenticación exitosa, establecer una sesión para el usuario.
-            session['user_id'] = user[2]  # Accede al primer valor en la tupla (idCuenta)
-            return redirect(url_for('dashboard'))
+        # Primero, obtén el hash almacenado para este correo
+        cursor.execute("SELECT clave FROM cuenta WHERE correo = %s", (correo,))
+        resultado = cursor.fetchone()
+        
+        if resultado:
+            clave_almacenada = resultado[0]
+            # Ahora, has la contraseña ingresada
+            clave_hasheada = hashlib.sha256(clave.encode()).hexdigest()
+            
+            # Compara los hashes
+            if clave_hasheada == clave_almacenada:
+                # Autenticación exitosa
+                session['user_id'] = correo  # O el ID del usuario si lo tienes
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Credenciales incorrectas. Por favor, inténtalo de nuevo.', 'danger')
         else:
-            # Autenticación fallida
-            flash('Credenciales incorrectas. Por favor, inténtalo de nuevo.', 'danger')
-            return redirect(url_for('login'))
+            flash('Usuario no encontrado.', 'danger')
+        
+        return redirect(url_for('login'))
 
     return render_template('login.html')
 
