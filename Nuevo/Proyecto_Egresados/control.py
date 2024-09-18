@@ -104,9 +104,26 @@ def laboral():
 @app.route('/dashboard')
 def dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT  general.Nombres, general.Apellido_P, general.Apellido_M, general.Sexo, general.Tel_Contacto,     general.Correo_Alumno,    general.Codigo_Postal,     general.Pais, general.Estado, general.Ciudad, general.Colonia, general.Nacionalidad, general.F_Nacimiento, general.carreras_interes,  grado_estudios.Uni_proce, grado_estudios.Carrera_Procedencial, grado_estudios.Titulado, grado_estudios.Ciclo_egreso, grado_estudios.Nivel_ingles, grado_estudios.Promedio, info_laboral.Trabajando, info_laboral.Direccion_trabajo, info_laboral.Horario_Laboral, info_laboral.Puesto_Trabajo, info_laboral.Sector FROM general, grado_estudios, info_laboral;")
+    
+    query = """
+    SELECT 
+        g.nombre, g.apellidoP, g.apellidoM, g.sexo, g.celular, 
+        g.Correo_Alumno, g.codigoPostal, g.Pais, g.Estado, 
+        g.Ciudad, g.Colonia, g.Nacionalidad, g.fechaNacimiento, g.posgrado,
+        e.centroUniversitario, e.carrera, e.titulado, e.cicloEgreso, e.nivelIngles, e.Promedio,
+        l.estatus AS Trabajando, l.nombre AS Direccion_trabajo, l.Horario_Laboral, l.Puesto_Trabajo, l.Sector
+    FROM 
+        general g
+    LEFT JOIN 
+        estudios e ON g.Correo_Alumno = e.Correo_A
+    LEFT JOIN 
+        laboral l ON g.Correo_Alumno = l.Correo_Alu
+    """
+    
+    cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
+    
     return render_template('dashboard.html', data=data)
 
 
