@@ -10,93 +10,120 @@ import random
 import hashlib
 
 
-correo = None
+
 def get_var():
-     return correo
+    correo = request.form.get('correo')
+    return correo
 
 def set_var(x):
      global correo
      correo = x
 
-#from Nuevo.Proyecto_Egresados.control import model
-
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta'
 mysql=MySQL(app)
 
+
+#FORMULARIO--------------------------------------------------------------------------
+
+# Página de Selección
+@app.route('/seleccion', methods=['GET', 'POST'])
+def seleccion():
+    if request.method == 'POST':
+        tipo_posgrado = request.form.get('posgradoInput')
+        selecciones = request.form.getlist('seleccionesPosgrado')
+
+        # Guardamos el tipo de posgrado y las selecciones en la sesión
+        session['tipo_posgrado'] = tipo_posgrado
+        session['carreras_interes'] = selecciones
+        return redirect(url_for('general'))
+
+    return render_template('seleccion.html')
+
+# Página de Datos Generales
 @app.route('/general', methods=['GET', 'POST'])
 def general():
     if request.method == 'POST':
-          nombre_gen = request.form['nombres']
-          apellido_p = request.form['apellido_p']
-          apellido_m = request.form['apellido_m']
-          sexo = request.form['sexo']
-          telefono = request.form['tel_contacto']
-          set_var(request.form['correo_alumno'])
-          c_postal = request.form['codigo_postal']
-          pais = request.form['pais']
-          estado = request.form['estado']
-          ciudad = request.form['ciudad']
-          colonia = request.form['colonia']
-          nacionalidad = request.form['nacionalidad']
-          f_nacimiento = request.form['f_nacimiento']
-          
-          # Obtener las carreras de interés de la sesión
-          carreras_interes = session.get('carreras_interes', '[]')
-          
-          insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, get_var(), c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes)
-          return redirect(url_for('estudios'))
+        nombre_gen = request.form['nombres']
+        apellido_p = request.form['apellido_p']
+        apellido_m = request.form['apellido_m']
+        sexo = request.form['sexo']
+        telefono = request.form['tel_contacto']
+        correo = request.form['correo_alumno']
+        c_postal = request.form['codigo_postal']
+        pais = request.form['pais']
+        estado = request.form['estado']
+        ciudad = request.form['ciudad']
+        colonia = request.form['colonia']
+        nacionalidad = request.form['nacionalidad']
+        f_nacimiento = request.form['f_nacimiento']
+
+        # Obtener las carreras de interés y el tipo de posgrado de la sesión
+        carreras_interes = session.get('carreras_interes', [])
+        tipo_posgrado = session.get('tipo_posgrado', '')
+
+        # Guardamos el correo en la variable global para usarlo después
+        session['correo'] = correo
+
+        insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes, tipo_posgrado)
+        return redirect(url_for('estudios'))
     
     return render_template('Generales.html')
 
+# Página de Datos de Estudios
 @app.route('/estudios', methods=['GET', 'POST'])
 def estudios():
     if request.method == 'POST':
-          uni_proce = request.form['nivel']
-          carrera = request.form['carrera']
-          titulado = request.form['titulado']
-          ciclo = request.form['ciclo']
-          ingles = request.form['ingles']
-          promedio = request.form['promedio']
-          insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, get_var())
-          return redirect(url_for('laboral'))
+        uni_proce = request.form['nivel']
+        carrera = request.form['carrera']
+        titulado = request.form['titulado']
+        ciclo = request.form['ciclo']
+        ingles = request.form['ingles']
+        promedio = request.form['promedio']
+        insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, session['correo'])
+        return redirect(url_for('laboral'))
 
     return render_template('Estudios.html')
-
 
 @app.route('/laboral', methods=['GET', 'POST'])
 def laboral():
     if request.method == 'POST':
-         siOno = request.form['trabajasiono']
-         lugar= request.form['lugardetrabajo']
-         horario= request.form['horariolaboral']
-         puesto= request.form['puestolaboral']
-         sector = request.form['sector']
-         
-         contrasena, correo_usuario = insertLaboral(siOno, lugar, horario, puesto, sector, get_var())
+        siOno = request.form['trabajasiono']
+        lugar = request.form['lugardetrabajo']
+        horario = request.form['horariolaboral']
+        puesto = request.form['puestolaboral']
+        sector = request.form['sector']
+        correo = session.get('correo')
 
-         destinatario = correo_usuario  # Usando el correo registrado
-         asunto = "Confirmación de Registro"
-         mensaje_base = "Gracias por registrarte. Tu información ha sido recibida con éxito."
-         mensaje_extra = """
-         
-         Bienvenido a nuestra comunidad de egresados.
+        if not correo:
+            print("Error: Correo no puede ser nulo")
+            flash('Error: Correo no puede ser nulo')
+            return redirect(url_for('laboral'))
 
-         Nos complace informarte que tu información ha sido registrada con éxito. Gracias por tu interés en nuestros programas de posgrado.
+        contrasena, correo_usuario = insertLaboral(siOno, lugar, horario, puesto, sector, correo)
 
-         Para obtener más información y continuar con el proceso, por favor, inicia sesión con la cuenta y contraseña que se te proporcionaron en este correo. Puedes hacerlo a través del siguiente enlace: LINK DEL LOGIN.
+        destinatario = correo_usuario  # Usando el correo registrado
+        asunto = "Confirmación de Registro"
+        mensaje_base = "Gracias por registrarte. Tu información ha sido recibida con éxito."
+        mensaje_extra = """
+        
+        Bienvenido a nuestra comunidad de egresados.
 
-         Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.
+        Nos complace informarte que tu información ha sido registrada con éxito. Gracias por tu interés en nuestros programas de posgrado.
 
-         ¡Que tengas un excelente día!
+        Para obtener más información y continuar con el proceso, por favor, inicia sesión con la cuenta y contraseña que se te proporcionaron en este correo. Puedes hacerlo a través del siguiente enlace: LINK DEL LOGIN.
+
+        Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.
+
+        ¡Que tengas un excelente día!
 
 
-         """
+        """
 
-         enviar_correo(destinatario, asunto, mensaje_base, contrasena, correo_usuario, mensaje_extra)
+        enviar_correo(destinatario, asunto, mensaje_base, contrasena, correo_usuario, mensaje_extra)
     
-         flash('Registro completo')
-         return redirect(url_for('inicio'))
+        flash('Registro completo')
+        return redirect(url_for('inicio'))
     
     return render_template('Laboral.html')
 
@@ -161,20 +188,6 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/seleccion', methods=['GET', 'POST'])
-def seleccion():
-     if request.method == 'POST':
-          tipo_posgrado = request.form.get('posgradoInput')
-          selecciones = request.form.get('seleccionesPosgrado')
-          
-          # Guardar las selecciones en la sesión para usarlas más tarde
-          session['tipo_posgrado'] = tipo_posgrado
-          session['carreras_interes'] = selecciones
-          
-          return redirect(url_for('general'))
-          
-     return render_template('seleccion.html')
-
 
 def Error404(error):
     return '<h1>Contacte a soporte tecnico</h1>'
@@ -184,14 +197,23 @@ def generar_contrasena(longitud=10):
     contrasena = ''.join(random.choice(caracteres) for i in range(longitud))
     return contrasena
 
-def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes):
-     cursor = mysql.connection.cursor()
-     cursor.execute("INSERT INTO general (nombre, apellidoP, apellidoM, sexo, celular, Correo_Alumno, codigoPostal, Pais, Estado, Ciudad, Colonia, Nacionalidad, fechaNacimiento, posgrado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", 
-                    (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes))
-     mysql.connection.commit()
-     cursor.close()
-     mysql.connection.close()
+def insertGeneral(nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento, carreras_interes, tipo_posgrado):
+    cursor = mysql.connection.cursor()
 
+    # Inserta los datos generales en la tabla 'general'
+    cursor.execute("INSERT INTO general (nombre, apellidoP, apellidoM, sexo, celular, Correo_Alumno, codigoPostal, Pais, Estado, Ciudad, Colonia, Nacionalidad, fechaNacimiento) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+                   (nombre_gen, apellido_p, apellido_m, sexo, telefono, correo, c_postal, pais, estado, ciudad, colonia, nacionalidad, f_nacimiento))
+    
+    
+    # Inserta la selección de posgrado en la tabla 'aspirante_carrera'
+    for carrera in carreras_interes:
+        if carrera:  # Verifica que el valor no esté vacío
+            print("Insertando carrera:", carrera)
+            cursor.execute("INSERT INTO aspirante_carrera (correo_alumno, idCarrera) VALUES (%s, %s);", (correo, carrera))
+    
+    mysql.connection.commit()
+    cursor.close()
+    
 def insertEstudios(uni_proce, carrera, titulado, ciclo, ingles, promedio, correo):
      cursor = mysql.connection.cursor()
      cursor.execute("INSERT INTO estudios (Correo_A, centroUniversitario, carrera, titulado, cicloEgreso, nivelIngles, Promedio) VALUES (%s, %s, %s, %s, %s, %s, %s);", 
@@ -204,6 +226,7 @@ def insertLaboral(siOno, lugar, horario, puesto, sector, correo):
     contrasena = generar_contrasena()  # Generar una contraseña aleatoria
 
     cursor = mysql.connection.cursor()
+
     cursor.execute("INSERT INTO laboral (estatus, nombre, Horario_Laboral, Puesto_Trabajo, Sector, Correo_Alu) VALUES (%s, %s, %s, %s, %s, %s);", 
                    (siOno, lugar, horario, puesto, sector, correo))
     mysql.connection.commit()
